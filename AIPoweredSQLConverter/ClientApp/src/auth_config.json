@@ -1,0 +1,9 @@
+{
+  "domain": "dev-64itzp4npb4uo8uv.us.auth0.com",
+  "clientId": "7Gc1JUtnTnL0W5gnAEb7dPDf2Cf8Id4p",
+  "audience": "https://nlsequel-dev-ama2dtd8eghhe0d9.eastus2-01.azurewebsites.net",
+  "scope": "openid profile email sub",
+  "ApiUri": "https://nlsequel-dev-ama2dtd8eghhe0d9.eastus2-01.azurewebsites.net",
+  "redirectUri": "https://nlsequel-dev-ama2dtd8eghhe0d9.eastus2-01.azurewebsites.net",
+  "stripePublishableKey": "pk_test_51R4sKP2UitquZ1ztnlRzLj5BQysDBpNKKoWnAnibgsbldq9umFFGnjNH2LY5CzWOQZPappsgLbpfh7nRpIu5qsfB00qS8ydtEX"
+}
