@@ -160,7 +160,7 @@ namespace AIPoweredSQLConverter.Host
             var app = builder.Build();
 
             // Enable CORS.
-            //app.UseCors("AllowSpecificOrigins");
+            app.UseCors("AllowSpecificOrigins");
 
             // Production settings.
             if (!app.Environment.IsDevelopment())
