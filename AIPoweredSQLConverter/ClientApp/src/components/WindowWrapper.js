@@ -56,7 +56,7 @@ const WindowWrapper = () => {
                         accessToken: token,
                     }));
                 } catch (error) {
-                    console.error("Error fetching access token");
+                    
                 }
 
                 try {
@@ -66,7 +66,7 @@ const WindowWrapper = () => {
                         tableDefinitions: sqlData,
                     }));
                 } catch (error) {
-                    console.error('Error fetching SQL data:', error.message);
+                    
                 }
             }
         };
@@ -91,7 +91,6 @@ const WindowWrapper = () => {
 
     const requestSQLConversion = async (inputMessage) => {
         if (!user || !user.sub) {
-            console.error('User is not authenticated or sub ID is missing');
             return;
         }
 
@@ -138,13 +137,12 @@ const WindowWrapper = () => {
                 }
             }
         } catch (error) {
-            console.error('Error during SQL conversion request:', error.message);
+            
         }
     };
 
     const handleAssistantSend = async (assistantInput) => {
         if (!user || !user.sub) {
-            console.error('User is not authenticated or sub ID is missing');
             return;
         }
 
@@ -170,13 +168,12 @@ const WindowWrapper = () => {
                 }));
             }
         } catch (error) {
-            console.error('Error during SQL data help request:', error.message);
+            
         }
     };
 
     const handleSave = async (tableDefinitions) => {
         if (!user || !user.sub) {
-            console.error('User is not authenticated or sub ID is missing');
             return;
         }
 
@@ -186,7 +183,7 @@ const WindowWrapper = () => {
         try {
             await apiClient.saveSQLData(userId, tableDefinitions);
         } catch (error) {
-            console.error('Error saving SQL data:', error.message);
+
         }
     };
 

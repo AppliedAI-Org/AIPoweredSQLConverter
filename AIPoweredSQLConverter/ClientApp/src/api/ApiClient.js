@@ -31,8 +31,7 @@ class ApiClient {
                         config.headers.Authorization = `Bearer ${token}`;
                     }
                 } catch (error) {
-                    console.error('Error fetching access token:', error);
-                    throw new Error("Authorization error");
+
                 }
                 return config;
             },
@@ -63,17 +62,10 @@ class ApiClient {
                 return await fn();
             } catch (error) {
                 if (error.response && error.response.status === 409) {
-                    // Concurrency error, retry
-                    console.warn(`Concurrency error detected. Retrying attempt ${attempt + 1} of ${retries}.`);
-                    // Optionally introduce a small delay before retrying
                     await new Promise(resolve => setTimeout(resolve, 100 * (attempt + 1))); // Exponential backoff
-                } else {
-                    // Other error, do not retry
-                    throw new Error("Something went wrong.");;
                 }
             }
         }
-        throw new Error("Maximum retries reached after concurrency errors.");
     }
 
     async createPortalSession(sub) {
@@ -82,11 +74,9 @@ class ApiClient {
             if (response.status === 200) {
                 if (response.data) return response.data;
             } else {
-                console.error('Failed to create portal session:', response.statusText);
                 return null;
             }
         } catch (error) {
-            console.error('Error during creating portal session:', error.message);
             return null;
         }
     }
@@ -97,11 +87,9 @@ class ApiClient {
             if (response.status === 200) {
                 return response.data.sessionId;
             } else {
-                console.error('Failed to create checkout session:', response.statusText);
                 return null;
             }
         } catch (error) {
-            console.error('Error during creating checkout session:', error.message);
             return null;
         }
     }
@@ -112,12 +100,7 @@ class ApiClient {
         if (!sessionId) sessionId = await this.createCheckoutSession(sub);
 
         if (sessionId) {
-            const { error } = await stripe.redirectToCheckout({ sessionId });
-            if (error) {
-                console.error('Stripe checkout redirection error:', error);
-            }
-        } else {
-            console.error('Failed to create Stripe checkout session.');
+            await stripe.redirectToCheckout({ sessionId });
         }
     }
 

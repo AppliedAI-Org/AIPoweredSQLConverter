@@ -21,8 +21,7 @@ const GenerateApiKey = () => {
             setApiKey(newApiKey);
             setError('');
         } catch (err) {
-            setError('Error generating new API key');
-            console.error('Error generating new API key:', err);
+
         }
     };
 

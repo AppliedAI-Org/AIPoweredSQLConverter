@@ -14,7 +14,7 @@ const PostLoginInitializer = () => {
                     // Call your backend endpoint to save the user data
                     await apiClient.saveUserData(user.sub);
                 } catch (error) {
-                    console.error('Failed to save user data:', error);
+                    
                 }
             }
         };
