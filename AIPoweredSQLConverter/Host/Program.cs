@@ -156,20 +156,11 @@ namespace AIPoweredSQLConverter.Host
                 options.AddApplicationInsights();
             });
 
-            // CORS.
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy("AllowSpecificOrigins", builder =>
-                    builder
-                        .WithOrigins("https://localhost:44483", "https://localhost:7228", "https://dev-64itzp4npb4uo8uv.us.auth0.com/*")
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
-            });
 
             var app = builder.Build();
 
             // Enable CORS.
-            app.UseCors("AllowSpecificOrigins");
+            //app.UseCors("AllowSpecificOrigins");
 
             // Production settings.
             if (!app.Environment.IsDevelopment())

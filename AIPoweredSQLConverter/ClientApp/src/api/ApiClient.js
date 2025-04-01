@@ -45,7 +45,7 @@ class ApiClient {
 
     async saveUserData(sub) {
         try {
-            const response = await this.client.post(`/promptflow/post/saveUser/${sub}`);
+            const response = await this.client.post(`promptflow/post/saveUser/${sub}`);
             if (response.status === 200) {
                 return response.data;
             } else {
