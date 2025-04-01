@@ -156,16 +156,38 @@ namespace AIPoweredSQLConverter.Host
                 options.AddApplicationInsights();
             });
 
+            // Production settings.
+            if (builder.Environment.IsDevelopment())
+            {
+                builder.Services.AddCors(options =>
+                {
+                    options.AddPolicy("AllowFrontend", builder =>
+                    {
+                        builder.WithOrigins("https://localhost:44483") 
+                               .AllowCredentials()
+                               .AllowAnyMethod()  
+                               .AllowAnyHeader(); 
+                    });
+                });
+            }
+            else
+            {
+                builder.Services.AddCors(options =>
+                {
+                    options.AddPolicy("AllowFrontend", builder =>
+                    {
+                        builder.WithOrigins("https://nlsequel-dev-ama2dtd8eghhe0d9.eastus2-01.azurewebsites.net", "https://nlsequel.azurewebsites.net") // Replace with your front-end's origin
+                                .AllowCredentials()
+                                .AllowAnyMethod()                      // Allow GET, POST, etc.
+                                .AllowAnyHeader();                     // Allow any headers
+                    });
+                });
+            }
 
             var app = builder.Build();
 
-            // Enable CORS.
-            app.UseCors("AllowSpecificOrigins");
-
-            // Production settings.
-            if (!app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment())
             {
-                app.UseHsts();
                 app.UseSwagger();
                 app.UseSwaggerUI(c =>
                 {
@@ -173,6 +195,8 @@ namespace AIPoweredSQLConverter.Host
                     c.RoutePrefix = "swagger";
                 });
             }
+
+            app.UseHsts();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
