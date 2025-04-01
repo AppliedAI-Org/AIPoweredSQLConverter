@@ -28,6 +28,13 @@ function ContentWindow({ tableDefinitions, onAssistantSend, onSave }) {
         onSave(localTableDefinitions);
     };
 
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleSend();
+        }
+    };
+
     return (
         <div className="component-container">
             <div className="pane">
@@ -50,6 +57,7 @@ function ContentWindow({ tableDefinitions, onAssistantSend, onSave }) {
                             placeholder="Describe your table(s) here to generate a template, or get help modifying an existing one..."
                             value={assistantInput}
                             onChange={handleAssistantInputChange}
+                            onKeyDown={handleKeyDown}
                         />
                     </div>
                     <button className="toolbar-button" onClick={handleSend}>Send</button>
