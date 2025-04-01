@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import SplitPane from 'react-split-pane';
 import { useAuth0 } from '@auth0/auth0-react';
-import { debounce } from 'lodash';
 import ChatWindow from './ChatWindow';
 import ContentWindow from './ContentWindow';
 import FooterSection from './FooterSection';
@@ -17,11 +15,7 @@ const WindowWrapper = () => {
     const { isAuthenticated, getAccessTokenSilently, user } = useAuth0();
     const [state, setState] = useState({
         tableDefinitions: '',
-        size: window.innerWidth < 1200 ? '50%' : '50%',
         isSmallViewport: window.innerWidth < 1200,
-        split: window.innerWidth < 1200 ? 'horizontal' : 'vertical',
-        minSize: 0,
-        maxSize: 0,
         stage: 0,
         conversationId: '',
         gameStartMessage: '',
@@ -31,7 +25,7 @@ const WindowWrapper = () => {
     });
 
     // Initialize API client
-    
+
 
     // Load messages from localStorage on mount
     useEffect(() => {
@@ -208,22 +202,7 @@ const WindowWrapper = () => {
     return (
         <div className="window-wrapper-container">
             <NavMenu />
-            <SplitPane
-                style={{ position: 'relative', width: '100%', height: '100%' }}
-                split={state.split}
-                minSize={state.minSize}
-                maxSize={state.maxSize}
-                size={state.size}
-                primary="second"
-                onDragFinished={debounce(
-                    (newSize) =>
-                        setState((prevState) => ({
-                            ...prevState,
-                            size: newSize,
-                        })),
-                    50
-                )}
-            >
+            <div className="fixed-pane-container">
                 <div className="pane">
                     <ContentWindow
                         tableDefinitions={state.tableDefinitions}
@@ -234,13 +213,6 @@ const WindowWrapper = () => {
                 <div className="pane">
                     <label className="chatwindow-label">SQL Query Converter</label>
                     <ChatWindow
-                        toggleSplit={() =>
-                            setState((prevState) => ({
-                                ...prevState,
-                                split: prevState.split === 'vertical' ? 'horizontal' : 'vertical',
-                                size: '50%',
-                            }))
-                        }
                         isSmallViewport={state.isSmallViewport}
                         messages={state.messages}
                         sendMessage={(inputMessage) => {
@@ -248,13 +220,11 @@ const WindowWrapper = () => {
                         }}
                         clearMessages={clearMessages}
                     />
-                    <div ref={React.createRef()} />
                 </div>
-            </SplitPane>
+            </div>
             <FooterSection />
         </div>
     );
 };
 
 export default WindowWrapper;
-
