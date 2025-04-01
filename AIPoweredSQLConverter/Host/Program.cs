@@ -166,6 +166,12 @@ namespace AIPoweredSQLConverter.Host
             if (!app.Environment.IsDevelopment())
             {
                 app.UseHsts();
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
+                    c.RoutePrefix = "swagger";
+                });
             }
 
             app.UseHttpsRedirection();
@@ -179,13 +185,6 @@ namespace AIPoweredSQLConverter.Host
             app.UseAuthentication();
             app.UseAuthorization();
 
-            // Swagger.
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
-                c.RoutePrefix = "swagger";
-            });
 
             // Map controllers and default route.
             app.MapControllerRoute(
