@@ -37,32 +37,30 @@ function ContentWindow({ tableDefinitions, onAssistantSend, onSave }) {
 
     return (
         <div className="component-container">
-            <div className="pane">
-                <label className="table-definitions-label">SQL Table Schema(s)</label>
-                <textarea
-                    className="table-definitions-input"
-                    value={localTableDefinitions}
-                    onChange={handleInputChange}
-                    rows="10"
-                    cols="50"
-                />
-                <div className="table-definitions-toolbar">
-                    <div className="assistant-container">
-                        <label className="assistant-label">
-                            SQL Table Construction Assistant
-                        </label>
-                        <input
-                            className="assistant-input"
-                            type="text"
-                            placeholder="Describe your table(s) here to generate a template, or get help modifying an existing one..."
-                            value={assistantInput}
-                            onChange={handleAssistantInputChange}
-                            onKeyDown={handleKeyDown}
-                        />
-                    </div>
-                    <button className="toolbar-button" onClick={handleSend}>Send</button>
-                    <button className="toolbar-button" onClick={handleSave}>Save</button>
+            <label className="table-definitions-label">SQL Table Schema(s)</label>
+            <textarea
+                className="table-definitions-input"
+                value={localTableDefinitions}
+                onChange={handleInputChange}
+                rows="10"
+                cols="50"
+            />
+            <div className="table-definitions-toolbar">
+                <div className="assistant-container">
+                    <label className="assistant-label">
+                        SQL Table Construction Assistant
+                    </label>
+                    <input
+                        className="assistant-input"
+                        type="text"
+                        placeholder="Describe your table(s) here to generate a template, or get help modifying an existing one..."
+                        value={assistantInput}
+                        onChange={handleAssistantInputChange}
+                        onKeyDown={handleKeyDown}
+                    />
                 </div>
+                <button className="toolbar-button" onClick={handleSend}>Send</button>
+                <button className="toolbar-button" onClick={handleSave}>Save</button>
             </div>
         </div>
     );

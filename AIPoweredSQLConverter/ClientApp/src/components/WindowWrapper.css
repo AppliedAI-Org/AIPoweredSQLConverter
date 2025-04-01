@@ -45,8 +45,12 @@
 }
 
 @media (max-width: 1200px) {
-    .window-wrapper-container {
-        height: 140vh;
+    .fixed-pane-container {
+        flex-direction: column; /* Stack panes vertically */
+    }
+
+    .pane {
+        width: 100%; /* Each pane takes up 100% of the width */
     }
 }
 
