@@ -34,12 +34,12 @@ const GenerateApiKey = () => {
             >
                 Generate API Key
             </button>
-            {apiKey && <p className="api-key-text">{apiKey}</p>}
-            {error && <p className="error">{error}</p>}
+            <div className="api-key-output-container">
+                {apiKey && <p className="api-key-text">{apiKey}</p>}
+                {error && <p className="error">{error}</p>}
+            </div>
         </div>
     );
 };
 
 export default GenerateApiKey;
-
-
