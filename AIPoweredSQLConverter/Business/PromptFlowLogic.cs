@@ -112,7 +112,7 @@ namespace AIPoweredSQLConverter.Business
             }
             catch (Exception)
             {
-                return BackendResponse<bool>.CreateFailureResponse("Error saving user.");
+                return BackendResponse<bool>.CreateFailureResponse($"Error saving user.");
             }
         }
 
