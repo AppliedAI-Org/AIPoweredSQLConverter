@@ -61,8 +61,14 @@ class ApiClient {
             try {
                 return await fn();
             } catch (error) {
-                if (error.response && error.response.status === 409) {
+                if (error.response && [404, 401].includes(error.response.status)) {
+                    return; // Do not retry 404 or 401 errors
+                }
+
+                if (attempt < retries - 1) {
                     await new Promise(resolve => setTimeout(resolve, 100 * (attempt + 1))); // Exponential backoff
+                } else {
+                    return;
                 }
             }
         }
