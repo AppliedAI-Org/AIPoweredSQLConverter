@@ -298,13 +298,7 @@ namespace AIPoweredSQLConverter.Business
                 var completionResponse = await _aiClient.ChatAsync(completionRequest);
                 var responseContent = completionResponse.Messages?.LastOrDefault()?.Content;
 
-                var validationRequest = new CompletionRequest()
-                {
-                    ProfileOptions = new Profile() { Name = _sqlValidationProfile },
-                    Messages = new List<Message>() { new Message() { Content = responseContent, Role = Role.User } }
-                };
-                var validationResponse = await _aiClient.ChatAsync(validationRequest);
-                var cleanedResponseContent = validationRequest.Messages?.LastOrDefault()?.Content;
+                var cleanedResponseContent = responseContent?.Replace("```sql", "").Replace("```", "");
 
                 if (!string.IsNullOrEmpty(cleanedResponseContent))
                 {

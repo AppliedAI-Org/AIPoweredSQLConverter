@@ -28,11 +28,8 @@ const StripePortalRedirect = () => {
                 else if (data && data.sessionId) {
                     apiClient.redirectToStripeCheckout(user.sub, data.sessionId);
                 }
-                else {
-                    console.error("Something went wrong when performing a stripe redirect.");
-                }
             } catch (error) {
-                console.error('Error creating portal session:', error);
+                
             }
         }
 
