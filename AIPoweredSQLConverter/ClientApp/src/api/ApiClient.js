@@ -56,7 +56,7 @@ class ApiClient {
     }
 
     // Helper method to retry a request
-    async retryRequest(fn, retries = 3) {
+    async retryRequest(fn, retries = 6) {
         for (let attempt = 0; attempt < retries; attempt++) {
             try {
                 return await fn();
