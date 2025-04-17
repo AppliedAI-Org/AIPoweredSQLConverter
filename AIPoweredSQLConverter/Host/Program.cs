@@ -163,10 +163,10 @@ namespace AIPoweredSQLConverter.Host
                 {
                     options.AddPolicy("AllowFrontend", builder =>
                     {
-                        builder.WithOrigins("https://localhost:44483") 
+                        builder.WithOrigins("https://localhost:44483")
                                .AllowCredentials()
-                               .AllowAnyMethod()  
-                               .AllowAnyHeader(); 
+                               .AllowAnyMethod()
+                               .AllowAnyHeader();
                     });
                 });
             }
@@ -201,6 +201,8 @@ namespace AIPoweredSQLConverter.Host
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
+
+            app.UseCors("AllowFrontend");
 
             // Add API key middleware before authentication and authorization.
             app.UseMiddleware<ApiKeyMiddleware>();
