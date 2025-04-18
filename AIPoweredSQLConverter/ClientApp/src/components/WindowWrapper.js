@@ -12,7 +12,17 @@ import authConfig from '../auth_config.json';
 const InnapropriateRequestErrorMessage = "Your last message was flagged as unrelated to SQL. Please check your input.";
 
 const WindowWrapper = () => {
+    // Temporary logic to disable authentication and set a fake user
+    const isAuthenticatedOverride = true;
     const { getAccessTokenSilently, auth0User } = useAuth0();
+    const user = isAuthenticatedOverride
+        ? {
+            sub: 'fake-user-id',
+            name: 'Test User',
+            email: 'testuser@example.com',
+        }
+        : auth0User;
+
     const [state, setState] = useState({
         tableDefinitions: '',
         isSmallViewport: window.innerWidth < 1200,
@@ -23,17 +33,6 @@ const WindowWrapper = () => {
         messages: [],
         connectionError: false,
     });
-
-    // Temporary logic to disable authentication and set a fake user  
-    const user = auth0User || {
-        sub: 'fake-user-id',
-        name: 'Test User',
-        email: 'testuser@example.com',
-    };
-    const isAuthenticatedOverride = true;  
-
-    // Initialize API client
-
 
     // Load messages from localStorage on mount
     useEffect(() => {
@@ -51,10 +50,11 @@ const WindowWrapper = () => {
         localStorage.setItem('messages', JSON.stringify(state.messages));
     }, [state.messages]);
 
+    // Skip authentication logic if isAuthenticatedOverride is true
     useEffect(() => {
-        const apiClient = new ApiClient(authConfig.ApiUri, getAccessTokenSilently);
-        const initialize = async () => {
-            if (isAuthenticatedOverride) {
+        if (!isAuthenticatedOverride) {
+            const apiClient = new ApiClient(authConfig.ApiUri, getAccessTokenSilently);
+            const initialize = async () => {
                 try {
                     const token = await getAccessTokenSilently({
                         audience: authConfig.audience,
@@ -64,7 +64,7 @@ const WindowWrapper = () => {
                         accessToken: token,
                     }));
                 } catch (error) {
-                    
+                    // Handle error
                 }
 
                 try {
@@ -74,13 +74,14 @@ const WindowWrapper = () => {
                         tableDefinitions: sqlData,
                     }));
                 } catch (error) {
-                    
+                    // Handle error
                 }
-            }
-        };
-        initialize();
+            };
+            initialize();
+        }
     }, [isAuthenticatedOverride, getAccessTokenSilently, user.sub]);
 
+    // Handle Stripe checkout click
     useEffect(() => {
         const apiClient = new ApiClient(authConfig.ApiUri, getAccessTokenSilently);
         const handleStripeCheckoutClick = (event) => {
@@ -117,20 +118,21 @@ const WindowWrapper = () => {
         }));
 
         try {
-            if (state.tableDefinitions === null
-                || state.tableDefinitions === ""
-                || state.tableDefinitions === "null"
-                || state.tableDefinitions === "Enter SQL table Schema(s) here to help the model with context.") {
+            if (
+                state.tableDefinitions === null ||
+                state.tableDefinitions === '' ||
+                state.tableDefinitions === 'null' ||
+                state.tableDefinitions === 'Enter SQL table Schema(s) here to help the model with context.'
+            ) {
                 const responseMessage = {
                     role: 'Assistant',
-                    content: "Please be sure to set valid data in the SQL schema input to the left.",
+                    content: 'Please be sure to set valid data in the SQL schema input to the left.',
                 };
                 setState((prevState) => ({
                     ...prevState,
                     messages: [...prevState.messages, responseMessage],
                 }));
-            }
-            else {
+            } else {
                 const response = await apiClient.requestSQLConversion(userId, updatedMessages, state.tableDefinitions);
 
                 if (response) {
@@ -145,7 +147,7 @@ const WindowWrapper = () => {
                 }
             }
         } catch (error) {
-            
+            // Handle error
         }
     };
 
@@ -176,7 +178,7 @@ const WindowWrapper = () => {
                 }));
             }
         } catch (error) {
-            
+            // Handle error
         }
     };
 
@@ -191,7 +193,7 @@ const WindowWrapper = () => {
         try {
             await apiClient.saveSQLData(userId, tableDefinitions);
         } catch (error) {
-
+            // Handle error
         }
     };
 
@@ -199,7 +201,7 @@ const WindowWrapper = () => {
     const clearMessages = () => {
         setState((prevState) => ({
             ...prevState,
-            messages: []
+            messages: [],
         }));
         localStorage.removeItem('messages');
     };
