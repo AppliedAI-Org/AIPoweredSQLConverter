@@ -1,9 +1,9 @@
 {
-  "domain": "applied-ai.us.auth0.com",
-  "clientId": "eclpX5jMHUF6HBwqXoP81BK10NwYnmEC",
-  "audience": "https://nlsequel.azurewebsites.net",
+  "domain": "dev-64itzp4npb4uo8uv.us.auth0.com",
+  "clientId": "7Gc1JUtnTnL0W5gnAEb7dPDf2Cf8Id4p",
+  "audience": "https://nlsequel-dev-ama2dtd8eghhe0d9.eastus2-01.azurewebsites.net",
   "scope": "openid profile email sub",
-  "ApiUri": "https://nlsequel.azurewebsites.net",
-  "redirectUri": "https://nlsequel.azurewebsites.net",
-  "stripePublishableKey": "pk_live_51R4sKGF1t9Sm4PQ9KsJPTYIzXajMdTqA3JOEcUwhXaam3E8UTKw5IByL1zCYidL6O8EDGnzOOHEeQRo14f27Inba00NCOgNa42"
+  "ApiUri": "https://nlsequel-dev-ama2dtd8eghhe0d9.eastus2-01.azurewebsites.net",
+  "redirectUri": "https://nlsequel-dev-ama2dtd8eghhe0d9.eastus2-01.azurewebsites.net",
+  "stripePublishableKey": "pk_test_51R4sKP2UitquZ1ztnlRzLj5BQysDBpNKKoWnAnibgsbldq9umFFGnjNH2LY5CzWOQZPappsgLbpfh7nRpIu5qsfB00qS8ydtEX"
 }
