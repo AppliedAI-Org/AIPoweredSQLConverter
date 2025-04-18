@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
+//import { useAuth0 } from '@auth0/auth0-react';
 import ChatWindow from './ChatWindow';
 import ContentWindow from './ContentWindow';
 import FooterSection from './FooterSection';
@@ -14,14 +14,11 @@ const InnapropriateRequestErrorMessage = "Your last message was flagged as unrel
 const WindowWrapper = () => {
     // Temporary logic to disable authentication and set a fake user
     const isAuthenticatedOverride = true;
-    const { getAccessTokenSilently, auth0User } = useAuth0();
-    const user = isAuthenticatedOverride
-        ? {
+    const user = {
             sub: 'fake-user-id',
             name: 'Test User',
             email: 'testuser@example.com',
-        }
-        : auth0User;
+        };
 
     const [state, setState] = useState({
         tableDefinitions: '',
@@ -53,19 +50,8 @@ const WindowWrapper = () => {
     // Skip authentication logic if isAuthenticatedOverride is true
     useEffect(() => {
         if (!isAuthenticatedOverride) {
-            const apiClient = new ApiClient(authConfig.ApiUri, getAccessTokenSilently);
+            const apiClient = new ApiClient(authConfig.ApiUri);
             const initialize = async () => {
-                try {
-                    const token = await getAccessTokenSilently({
-                        audience: authConfig.audience,
-                    });
-                    setState((prevState) => ({
-                        ...prevState,
-                        accessToken: token,
-                    }));
-                } catch (error) {
-                    // Handle error
-                }
 
                 try {
                     const sqlData = await apiClient.getSQLData(user.sub);
@@ -79,11 +65,11 @@ const WindowWrapper = () => {
             };
             initialize();
         }
-    }, [isAuthenticatedOverride, getAccessTokenSilently, user.sub]);
+    }, [isAuthenticatedOverride, user.sub]);
 
     // Handle Stripe checkout click
     useEffect(() => {
-        const apiClient = new ApiClient(authConfig.ApiUri, getAccessTokenSilently);
+        const apiClient = new ApiClient(authConfig.ApiUri);
         const handleStripeCheckoutClick = (event) => {
             if (event.target && event.target.id === 'stripe-checkout-link') {
                 event.preventDefault();
@@ -96,14 +82,14 @@ const WindowWrapper = () => {
         return () => {
             document.removeEventListener('click', handleStripeCheckoutClick);
         };
-    }, [getAccessTokenSilently, user.sub]);
+    }, [user.sub]);
 
     const requestSQLConversion = async (inputMessage) => {
         if (!user || !user.sub) {
             return;
         }
 
-        const apiClient = new ApiClient(authConfig.ApiUri, getAccessTokenSilently);
+        const apiClient = new ApiClient(authConfig.ApiUri);
 
         const userId = user.sub;
         const newMessage = {
@@ -156,7 +142,7 @@ const WindowWrapper = () => {
             return;
         }
 
-        const apiClient = new ApiClient(authConfig.ApiUri, getAccessTokenSilently);
+        const apiClient = new ApiClient(authConfig.ApiUri);
         const userId = user.sub;
 
         try {
@@ -187,7 +173,7 @@ const WindowWrapper = () => {
             return;
         }
 
-        const apiClient = new ApiClient(authConfig.ApiUri, getAccessTokenSilently);
+        const apiClient = new ApiClient(authConfig.ApiUri);
         const userId = user.sub;
 
         try {
