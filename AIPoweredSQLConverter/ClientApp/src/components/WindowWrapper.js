@@ -12,7 +12,7 @@ import authConfig from '../auth_config.json';
 const InnapropriateRequestErrorMessage = "Your last message was flagged as unrelated to SQL. Please check your input.";
 
 const WindowWrapper = () => {
-    const { isAuthenticated, getAccessTokenSilently, user } = useAuth0();
+    const { getAccessTokenSilently, auth0User } = useAuth0();
     const [state, setState] = useState({
         tableDefinitions: '',
         isSmallViewport: window.innerWidth < 1200,
@@ -23,6 +23,14 @@ const WindowWrapper = () => {
         messages: [],
         connectionError: false,
     });
+
+    // Temporary logic to disable authentication and set a fake user  
+    const user = auth0User || {
+        sub: 'fake-user-id',
+        name: 'Test User',
+        email: 'testuser@example.com',
+    };
+    const isAuthenticatedOverride = true;  
 
     // Initialize API client
 
@@ -46,7 +54,7 @@ const WindowWrapper = () => {
     useEffect(() => {
         const apiClient = new ApiClient(authConfig.ApiUri, getAccessTokenSilently);
         const initialize = async () => {
-            if (isAuthenticated) {
+            if (isAuthenticatedOverride) {
                 try {
                     const token = await getAccessTokenSilently({
                         audience: authConfig.audience,
@@ -71,7 +79,7 @@ const WindowWrapper = () => {
             }
         };
         initialize();
-    }, [isAuthenticated, getAccessTokenSilently, user.sub]);
+    }, [isAuthenticatedOverride, getAccessTokenSilently, user.sub]);
 
     useEffect(() => {
         const apiClient = new ApiClient(authConfig.ApiUri, getAccessTokenSilently);
