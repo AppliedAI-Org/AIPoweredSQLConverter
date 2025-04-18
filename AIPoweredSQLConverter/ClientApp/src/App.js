@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Layout } from './components/Layout';
-import ProtectedWindowWrapper from './components/ProtectedWindowWrapper';
+//import ProtectedWindowWrapper from './components/ProtectedWindowWrapper';
+import WindowWrapper from './components/WindowWrapper';
 import ApiReference from './components/ApiReference';
 import HomePage from './components/HomePage';
 import StripePortalRedirect from './components/StripePortalRedirect';
@@ -18,7 +19,8 @@ export default class App extends Component {
                 <PostLoginInitializer />
                 <Routes>
                     <Route path="/" element={<HomePage />} />
-                    <Route path="/api" element={<ProtectedWindowWrapper />} />
+                    <Route path="/api" element={ <WindowWrapper /> }/>
+                    {/*<Route path="/api" element={<ProtectedWindowWrapper />} />*/}
                     <Route path="/reference" element={<ApiReference />} />
                     <Route path="/home" element={<HomePage />} />
                     <Route path="/stripe-portal" element={<StripePortalRedirect />} />
