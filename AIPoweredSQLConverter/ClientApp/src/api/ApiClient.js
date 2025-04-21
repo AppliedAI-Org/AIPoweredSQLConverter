@@ -9,8 +9,9 @@ const DefaultErrorMessage = "Something went wrong. If you continue to receive th
 const NullTableErrorMessage = "Please ensure you've attached SQL table schema(s) to the left.";
 const TooManyRequestsMessage = "Sorry, but it looks like your usage quota has been depleted. To sign up for pay as you go billing, you can do so here: "
 class ApiClient {
-    constructor(baseUrl) {
+    constructor(baseUrl, getAccessTokenSilently) {
         this.baseUrl = baseUrl;
+        this.getAccessTokenSilently = getAccessTokenSilently;
         this.client = axios.create({
             baseURL: baseUrl,
         });

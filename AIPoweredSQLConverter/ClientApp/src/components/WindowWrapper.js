@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-//import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth0 } from '@auth0/auth0-react';
 import ChatWindow from './ChatWindow';
 import ContentWindow from './ContentWindow';
 import FooterSection from './FooterSection';
@@ -12,14 +12,7 @@ import authConfig from '../auth_config.json';
 const InnapropriateRequestErrorMessage = "Your last message was flagged as unrelated to SQL. Please check your input.";
 
 const WindowWrapper = () => {
-    // Temporary logic to disable authentication and set a fake user
-    const isAuthenticatedOverride = true;
-    const user = {
-            sub: 'fake-user-id',
-            name: 'Test User',
-            email: 'testuser@example.com',
-        };
-
+    const { isAuthenticated, getAccessTokenSilently, user } = useAuth0();
     const [state, setState] = useState({
         tableDefinitions: '',
         isSmallViewport: window.innerWidth < 1200,
@@ -30,6 +23,9 @@ const WindowWrapper = () => {
         messages: [],
         connectionError: false,
     });
+
+    // Initialize API client
+
 
     // Load messages from localStorage on mount
     useEffect(() => {
@@ -47,11 +43,21 @@ const WindowWrapper = () => {
         localStorage.setItem('messages', JSON.stringify(state.messages));
     }, [state.messages]);
 
-    // Skip authentication logic if isAuthenticatedOverride is true
     useEffect(() => {
-        if (!isAuthenticatedOverride) {
-            const apiClient = new ApiClient(authConfig.ApiUri);
-            const initialize = async () => {
+        const apiClient = new ApiClient(authConfig.ApiUri, getAccessTokenSilently);
+        const initialize = async () => {
+            if (isAuthenticated) {
+                try {
+                    const token = await getAccessTokenSilently({
+                        audience: authConfig.audience,
+                    });
+                    setState((prevState) => ({
+                        ...prevState,
+                        accessToken: token,
+                    }));
+                } catch (error) {
+                    
+                }
 
                 try {
                     const sqlData = await apiClient.getSQLData(user.sub);
@@ -60,16 +66,15 @@ const WindowWrapper = () => {
                         tableDefinitions: sqlData,
                     }));
                 } catch (error) {
-                    // Handle error
+                    
                 }
-            };
-            initialize();
-        }
-    }, [isAuthenticatedOverride, user.sub]);
+            }
+        };
+        initialize();
+    }, [isAuthenticated, getAccessTokenSilently, user.sub]);
 
-    // Handle Stripe checkout click
     useEffect(() => {
-        const apiClient = new ApiClient(authConfig.ApiUri);
+        const apiClient = new ApiClient(authConfig.ApiUri, getAccessTokenSilently);
         const handleStripeCheckoutClick = (event) => {
             if (event.target && event.target.id === 'stripe-checkout-link') {
                 event.preventDefault();
@@ -82,14 +87,14 @@ const WindowWrapper = () => {
         return () => {
             document.removeEventListener('click', handleStripeCheckoutClick);
         };
-    }, [user.sub]);
+    }, [getAccessTokenSilently, user.sub]);
 
     const requestSQLConversion = async (inputMessage) => {
         if (!user || !user.sub) {
             return;
         }
 
-        const apiClient = new ApiClient(authConfig.ApiUri);
+        const apiClient = new ApiClient(authConfig.ApiUri, getAccessTokenSilently);
 
         const userId = user.sub;
         const newMessage = {
@@ -104,21 +109,20 @@ const WindowWrapper = () => {
         }));
 
         try {
-            if (
-                state.tableDefinitions === null ||
-                state.tableDefinitions === '' ||
-                state.tableDefinitions === 'null' ||
-                state.tableDefinitions === 'Enter SQL table Schema(s) here to help the model with context.'
-            ) {
+            if (state.tableDefinitions === null
+                || state.tableDefinitions === ""
+                || state.tableDefinitions === "null"
+                || state.tableDefinitions === "Enter SQL table Schema(s) here to help the model with context.") {
                 const responseMessage = {
                     role: 'Assistant',
-                    content: 'Please be sure to set valid data in the SQL schema input to the left.',
+                    content: "Please be sure to set valid data in the SQL schema input to the left.",
                 };
                 setState((prevState) => ({
                     ...prevState,
                     messages: [...prevState.messages, responseMessage],
                 }));
-            } else {
+            }
+            else {
                 const response = await apiClient.requestSQLConversion(userId, updatedMessages, state.tableDefinitions);
 
                 if (response) {
@@ -133,7 +137,7 @@ const WindowWrapper = () => {
                 }
             }
         } catch (error) {
-            // Handle error
+            
         }
     };
 
@@ -142,7 +146,7 @@ const WindowWrapper = () => {
             return;
         }
 
-        const apiClient = new ApiClient(authConfig.ApiUri);
+        const apiClient = new ApiClient(authConfig.ApiUri, getAccessTokenSilently);
         const userId = user.sub;
 
         try {
@@ -164,7 +168,7 @@ const WindowWrapper = () => {
                 }));
             }
         } catch (error) {
-            // Handle error
+            
         }
     };
 
@@ -173,13 +177,13 @@ const WindowWrapper = () => {
             return;
         }
 
-        const apiClient = new ApiClient(authConfig.ApiUri);
+        const apiClient = new ApiClient(authConfig.ApiUri, getAccessTokenSilently);
         const userId = user.sub;
 
         try {
             await apiClient.saveSQLData(userId, tableDefinitions);
         } catch (error) {
-            // Handle error
+
         }
     };
 
@@ -187,7 +191,7 @@ const WindowWrapper = () => {
     const clearMessages = () => {
         setState((prevState) => ({
             ...prevState,
-            messages: [],
+            messages: []
         }));
         localStorage.removeItem('messages');
     };
