@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import emailjs from 'emailjs-com';
 import './ChatWindow.css';
 import { Message } from './Message';
