@@ -107,14 +107,13 @@ namespace AIPoweredSQLConverter.Client.IntelligenceHub
                     if (!string.IsNullOrEmpty(_baseUrl)) urlBuilder_.Append(_baseUrl);
                     // Operation Path: "Completion/Chat/{name}"
                     urlBuilder_.Append("Completion/Chat/");
-                    if (name != null)
+                    if (!string.IsNullOrEmpty(name))
                     {
+                        urlBuilder_.Append("{name}");
                         urlBuilder_.Append(System.Uri.EscapeDataString(ConvertToString(name, System.Globalization.CultureInfo.InvariantCulture)));
                     }
-                    else
-                        if (urlBuilder_.Length > 0) urlBuilder_.Length--;
-                    urlBuilder_.Append("{name}");
-
+                    else if (urlBuilder_.Length > 0) urlBuilder_.Length--;
+                    
                     PrepareRequest(client_, request_, urlBuilder_);
 
                     var url_ = urlBuilder_.ToString();
