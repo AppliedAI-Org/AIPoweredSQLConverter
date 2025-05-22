@@ -1,3 +1,8 @@
+.pane {
+    max-height: 82vh;
+}
+
+
 /* ChatWindow.css */
 .chat-window {
     display: flex;
@@ -14,8 +19,8 @@
 }
 
 .message-list {
+    overflow-y: scroll;
     flex: 1;
-    overflow-y: auto;
     scroll-behavior: smooth;
     padding: 0.625em;
     background-color: #2e2e2e; /* Darker background for message list */
